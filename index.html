@@ -197,6 +197,17 @@
             max-width: 90vw;
         }
 
+        /* Fix for Emoji Rendering */
+        .emoji {
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Android Emoji', sans-serif !important;
+            -webkit-text-fill-color: initial !important;
+            background: none !important;
+            -webkit-background-clip: initial !important;
+            display: inline-block;
+            vertical-align: middle;
+            font-style: normal;
+        }
+
         .hero-subtitle {
             font-size: clamp(0.9rem, 4.5vw, 1.1rem);
             font-weight: 300;
