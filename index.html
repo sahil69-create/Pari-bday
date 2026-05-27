@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Bestie 💖</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --primary-pink: #ff7eb9;
+            --primary-purple: #7e5bef;
+            --text-white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-glow: 0 0 15px rgba(255, 126, 185, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out, visibility 1s;
+        }
+
+        .loader-content {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loader-quote {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: var(--primary-pink);
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInOut 3s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .heart-loader {
+            color: var(--primary-pink);
+            font-size: 3rem;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+
+        /* Balloons Animation */
+        .balloon-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .balloon {
+            position: absolute;
+            bottom: -150px;
+            width: 40px;
+            height: 50px;
+            background: var(--primary-pink);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: floatUp 15s linear infinite;
+        }
+
+        .balloon::before {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 19px;
+            width: 2px;
+            height: 20px;
+            background: rgba(255,255,255,0.3);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; }
+        }
+
+        /* Particles Background */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Custom Cursor Glow */
+        #cursor-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 126, 185, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            display: none; /* Desktop only usually */
+        }
+
+        @media (min-width: 1024px) {
+            #cursor-glow { display: block; }
+        }
+
+        /* Common Layout */
+        section {
+            min-height: 100vh;
+            padding: 80px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Hero Section */
+        #hero {
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(126, 91, 239, 0.1) 0%, transparent 70%);
+        }
+
+        .hero-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(3rem, 10vw, 5rem);
+            background: linear-gradient(45deg, var(--primary-pink), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 126, 185, 0.3));
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 1.6;
+            max-width: 300px;
+            margin: 0 auto 40px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .glow-btn {
+            background: transparent;
+            border: 1px solid var(--primary-pink);
+            color: var(--text-white);
+            padding: 15px 35px;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--neon-glow);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .glow-btn:hover {
+            background: var(--primary-pink);
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(255, 126, 185, 0.8);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: var(--primary-pink);
+            font-size: 1.5rem;
+            opacity: 0.6;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+            40% { transform: translateY(-10px) translateX(-50%); }
+            60% { transform: translateY(-5px) translateX(-50%); }
+        }
+
+        /* Emotional Intro */
+        #intro {
+            background: rgba(0,0,0,0.5);
+        }
+
+        .typewriter-container {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            text-align: center;
+            min-height: 100px;
+            color: var(--primary-pink);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* Memories Section */
+        .section-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: var(--primary-purple);
+        }
+
+        .memories-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .memory-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .memory-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-pink);
+        }
+
+        .memory-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* Shayari Section */
+        #shayari {
+            background: linear-gradient(to bottom, transparent, rgba(126, 91, 239, 0.05));
+        }
+
+        .shayari-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(5px);
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            border-left: 4px solid var(--primary-pink);
+            max-width: 350px;
+            margin-bottom: 30px;
+        }
+
+        .shayari-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #eee;
+        }
+
+        /* Letter Section */
+        .letter-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            padding: 40px 25px;
+            border-radius: 30px;
+            max-width: 380px;
+            text-align: left;
+            position: relative;
+        }
+
+        .letter-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.9);
+            font-weight: 300;
+        }
+
+        .letter-heart {
+            position: absolute;
+            bottom: -15px;
+            right: 20px;
+            color: var(--primary-pink);
+            font-size: 2rem;
+            animation: heartbeat 2s infinite;
+        }
+
+        /* Celebration Section */
+        #celebration {
+            text-align: center;
+        }
+
+        .celebration-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            margin-bottom: 30px;
+            animation: textGlow 2s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px rgba(255, 126, 185, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 126, 185, 1), 0 0 40px rgba(126, 91, 239, 0.8); }
+        }
+
+        /* Final Ending */
+        #ending {
+            text-align: center;
+            padding-bottom: 120px;
+        }
+
+        .ending-text {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .final-line {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: var(--primary-pink);
+        }
+
+        /* Music Toggle */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            background: var(--primary-pink);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 126, 185, 0.5);
+        }
+
+        /* Scroll Progress */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-pink), var(--primary-purple));
+            z-index: 10000;
+            width: 0%;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            section { padding: 60px 15px; }
+            .hero-title { font-size: 3.5rem; }
+            .section-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader-content">
+            <i class="fas fa-heart heart-loader"></i>
+            <div class="loader-quote">Creating something special...</div>
+        </div>
+    </div>
+
+    <!-- Background Elements -->
+    <div id="progress-bar"></div>
+    <div id="particles-js"></div>
+    <div id="cursor-glow"></div>
+
+    <!-- Music Control -->
+    <div class="music-control" onclick="toggleMusic()">
+        <i id="music-icon" class="fas fa-music"></i>
+    </div>
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <h1 class="hero-title" data-aos="zoom-in">Happy Birthday Pari 💖</h1>
+        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="300">
+            Some people become memories... <br> but you became a part of my life.
+        </p>
+        <a href="#intro" class="glow-btn" data-aos="fade-up" data-aos-delay="600">Tap to Continue</a>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Emotional Intro Section -->
+    <section id="intro">
+        <div class="typewriter-container">
+            <span id="typed-text"></span>
+        </div>
+    </section>
+
+    <!-- Friendship Memories Section -->
+    <section id="memories">
+        <h2 class="section-title" data-aos="fade-down">Our Unfiltered Bond ✨</h2>
+        <div class="memories-grid">
+            <div class="memory-card" data-aos="fade-right">
+                <span class="memory-icon">🌙</span>
+                <h3>Late Night Talks</h3>
+                <p>From venting out to laughing till 3 AM.</p>
+            </div>
+            <div class="memory-card" data-aos="fade-left" data-aos-delay="200">
+                <span class="memory-icon">😂</span>
+                <h3>Random Fights</h3>
+                <p>The ones that always end with "Chal ab bolna band kar".</p>
+            </div>
+            <div class="memory-card" data-aos="fade-right" data-aos-delay="400">
+                <span class="memory-icon">❤️</span>
+                <h3>Unlimited Support</h3>
+                <p>You stayed when everyone else had a reason to leave.</p>
+            </div>
+            <div class="memory-card" data-aos="fade-left" data-aos-delay="600">
+                <span class="memory-icon">✨</span>
+                <h3>Crazy Moments</h3>
+                <p>The inside jokes that only we understand.</p>
+            </div>
+            <div class="memory-card" data-aos="fade-right" data-aos-delay="800">
+                <span class="memory-icon">🤍</span>
+                <h3>Silent Understanding</h3>
+                <p>Because you know what I'm feeling even before I speak.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shayari Section -->
+    <section id="shayari">
+        <h2 class="section-title" data-aos="fade-down">Dil Se... ✍️</h2>
+        <div class="shayari-card" data-aos="flip-up">
+            <p class="shayari-text">
+                "Na khoon ka rishta,<br>
+                na saalon purani pehchaan...<br>
+                phir bhi tu un logon mein hai<br>
+                jinke bina din adhura lagta hai."
+            </p>
+        </div>
+        <div class="shayari-card" data-aos="flip-up" data-aos-delay="300">
+            <p class="shayari-text">
+                "Har baar zaroori nahi ki pyaar hi special ho...<br>
+                kuch dosti bhi dil ko us level tak chhoo jaati hai<br>
+                jahan words kam pad jaate hain."
+            </p>
+        </div>
+    </section>
+
+    <!-- Emotional Letter Section -->
+    <section id="letter">
+        <h2 class="section-title" data-aos="fade-down">A Note For You 💌</h2>
+        <div class="letter-container" data-aos="zoom-in">
+            <div class="letter-text">
+                To my constant, Pari,<br><br>
+                I was thinking about what to write, and I realized that no amount of words can ever truly capture what your friendship means to me. You aren't just a best friend; you're the person I look for when I'm happy, the person I call when I'm breaking down, and the person who knows my messiest parts and still chooses to stay.<br><br>
+                Thank you for being my therapist, my partner in crime, and my safest home. In a world where everything is temporary, thank you for being my permanent. You deserve the entire universe today and every day. May your smile never fade, and may we keep creating these beautiful, chaotic memories together.<br><br>
+                Always here for you, no matter what.<br>
+                Happy Birthday! 🌸
+            </div>
+            <i class="fas fa-heart letter-heart"></i>
+        </div>
+    </section>
+
+    <!-- Celebration Section -->
+    <section id="celebration">
+        <div class="balloon-container" id="balloon-container"></div>
+        <div class="celebration-content">
+            <h2 class="celebration-title" data-aos="zoom-out">Thank You For Existing 💖</h2>
+            <div id="confetti-trigger"></div>
+        </div>
+    </section>
+
+    <!-- Final Ending Section -->
+    <section id="ending">
+        <div class="ending-content" data-aos="fade-up">
+            <p class="ending-text">
+                Pata nahi future mein kya hoga...<br>
+                bas itna pata hai, tu meri life ka woh part hai<br>
+                jise main kabhi lose nahi karna chahta.
+            </p>
+            <h3 class="final-line">Stay Happy Always, Pari 🌸</h3>
+        </div>
+    </section>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: false,
+            mirror: true
+        });
+
+        // Loading Screen Logic
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loading-screen');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+            }, 2500);
+        });
+
+        // Cursor Glow Logic
+        const cursor = document.getElementById('cursor-glow');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Progress Bar Logic
+        window.onscroll = () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + "%";
+
+            // Trigger confetti when celebration section is reached
+            const celebrationSection = document.getElementById('celebration');
+            const rect = celebrationSection.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                launchConfetti();
+            }
+        };
+
+        // Typewriter Effect
+        new Typed('#typed-text', {
+            strings: [
+                'Kuch log bas dost nahi hote...',
+                'Woh sukoon ban jaate hain.',
+                'Thank you for being that sukoon in my life.',
+                'You are special. Forever. ✨'
+            ],
+            typeSpeed: 50,
+            backSpeed: 30,
+            backDelay: 2000,
+            loop: true
+        });
+
+        // Confetti Logic
+        let confettiLaunched = false;
+        function launchConfetti() {
+            if (confettiLaunched) return;
+            confettiLaunched = true;
+            
+            const duration = 15 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+            
+            // Reset after some time so it can trigger again if scrolled back
+            setTimeout(() => { confettiLaunched = false; }, 30000);
+        }
+
+        // Music Logic
+        const music = document.getElementById('bg-music');
+        const musicIcon = document.getElementById('music-icon');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicIcon.classList.remove('fa-pause');
+                musicIcon.classList.add('fa-music');
+            } else {
+                music.play();
+                musicIcon.classList.remove('fa-music');
+                musicIcon.classList.add('fa-pause');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Particles Background
+        particlesJS('particles-js', {
+            "particles": {
+                "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": ["#ff7eb9", "#7e5bef", "#ffffff"] },
+                "shape": { 
+                    "type": ["circle", "heart"],
+                    "stroke": { "width": 0, "color": "#000000" }
+                },
+                "opacity": { "value": 0.4, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
+                "size": { "value": 3, "random": true, "anim": { "enable": true, "speed": 2, "size_min": 0.1, "sync": false } },
+                "line_linked": { "enable": false },
+                "move": { "enable": true, "speed": 1.5, "direction": "top", "random": true, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "bubble" }, "onclick": { "enable": true, "mode": "push" } },
+                "modes": { "bubble": { "distance": 200, "size": 6, "duration": 2, "opacity": 0.8, "speed": 3 } }
+            }
+        });
+
+        // Create Balloons
+        function createBalloons() {
+            const container = document.getElementById('balloon-container');
+            const colors = ['#ff7eb9', '#7e5bef', '#ffb6c1', '#9370db'];
+            
+            for (let i = 0; i < 15; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.left = Math.random() * 100 + '%';
+                balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                balloon.style.animationDelay = Math.random() * 10 + 's';
+                balloon.style.width = (Math.random() * 20 + 30) + 'px';
+                balloon.style.height = (parseFloat(balloon.style.width) * 1.2) + 'px';
+                container.appendChild(balloon);
+            }
+        }
+        createBalloons();
+    </script>
+</body>
+</html>
