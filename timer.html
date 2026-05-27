@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waiting for Pari's Birthday... 💖</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --primary-pink: #ff7eb9;
+            --primary-purple: #7e5bef;
+            --text-white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* Background Particles */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            padding: 40px 20px;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 40px rgba(255, 126, 185, 0.1);
+        }
+
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2rem, 8vw, 3rem);
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary-pink), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-weight: 300;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 40px;
+        }
+
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .timer-box {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px 5px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .timer-value {
+            font-size: clamp(1.5rem, 6vw, 2.2rem);
+            font-weight: 600;
+            color: var(--primary-pink);
+            display: block;
+        }
+
+        .timer-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+
+        .heart-icon {
+            color: var(--primary-pink);
+            font-size: 2rem;
+            margin-top: 30px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+
+        /* Message that appears when it's time */
+        #final-message {
+            display: none;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: var(--primary-pink);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="container">
+        <h1 class="title">Counting Down for Pari... 🌸</h1>
+        <p class="subtitle">Something special is coming on June 2nd!</p>
+
+        <div class="timer-grid">
+            <div class="timer-box">
+                <span class="timer-value" id="days">00</span>
+                <span class="timer-label">Days</span>
+            </div>
+            <div class="timer-box">
+                <span class="timer-value" id="hours">00</span>
+                <span class="timer-label">Hours</span>
+            </div>
+            <div class="timer-box">
+                <span class="timer-value" id="minutes">00</span>
+                <span class="timer-label">Mins</span>
+            </div>
+            <div class="timer-box">
+                <span class="timer-value" id="seconds">00</span>
+                <span class="timer-label">Secs</span>
+            </div>
+        </div>
+
+        <div id="final-message">The Wait is Over! Opening your surprise... 💖</div>
+        
+        <i class="fas fa-heart heart-icon"></i>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        // Set the date we're counting down to
+        // If today is after June 2nd, 2026, it will count down to 2027
+        const currentYear = new Date().getFullYear();
+        let targetDate = new Date(`June 2, ${currentYear} 00:00:00`).getTime();
+        
+        // If the date has already passed this year, set for next year
+        if (new Date().getTime() > targetDate) {
+            targetDate = new Date(`June 2, ${currentYear + 1} 00:00:00`).getTime();
+        }
+
+        const countdown = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
+
+            // If the countdown is finished, redirect to the birthday page
+            if (distance < 0) {
+                clearInterval(countdown);
+                document.querySelector(".timer-grid").style.display = "none";
+                document.getElementById("final-message").style.display = "block";
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 3000);
+            }
+        }, 1000);
+
+        // Particles Background
+        particlesJS('particles-js', {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ff7eb9" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.3, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": false },
+                "move": { "enable": true, "speed": 1, "direction": "top", "random": true }
+            }
+        });
+    </script>
+</body>
+</html>
