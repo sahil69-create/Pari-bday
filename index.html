@@ -453,8 +453,8 @@
     <div class="music-control" onclick="toggleMusic()">
         <i id="music-icon" class="fas fa-music"></i>
     </div>
-    <audio id="bg-music" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    <audio id="bg-music" loop autoplay>
+        <source src="https://files.catbox.moe/76c9ja.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Hero Section -->
@@ -463,7 +463,7 @@
         <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="300">
             Some people become memories... <br> but you became a part of my life.
         </p>
-        <a href="#intro" class="glow-btn" data-aos="fade-up" data-aos-delay="600">Tap to Continue</a>
+        <a href="#intro" class="glow-btn" data-aos="fade-up" data-aos-delay="600" onclick="startMusic()">Tap to Continue</a>
         <div class="scroll-indicator">
             <i class="fas fa-chevron-down"></i>
         </div>
@@ -574,22 +574,58 @@
         // Initialize AOS with optimized settings for mobile
         AOS.init({
             duration: 800,
-            once: true, // Animations happen only once
-            mirror: false, // Disable mirror for performance
-            disable: 'mobile' // Optional: if still lags, can disable AOS on mobile
+            once: true,
+            mirror: false,
+            disable: 'mobile'
         });
         
-        // Alternative: lighter AOS for mobile
         if (window.innerWidth < 480) {
             AOS.init({
                 duration: 600,
                 once: true,
-                offset: 50 // Trigger sooner
+                offset: 50
             });
         }
 
-        // Loading Screen Logic
+        // Music Logic
+        const music = document.getElementById('bg-music');
+        const musicIcon = document.getElementById('music-icon');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicIcon.classList.remove('fa-pause');
+                musicIcon.classList.add('fa-music');
+            } else {
+                music.play().catch(e => console.log("Autoplay blocked"));
+                musicIcon.classList.remove('fa-music');
+                musicIcon.classList.add('fa-pause');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function startMusic() {
+            if (!isPlaying) {
+                music.play().then(() => {
+                    isPlaying = true;
+                    musicIcon.classList.remove('fa-music');
+                    musicIcon.classList.add('fa-pause');
+                }).catch(e => console.log("Playback failed"));
+            }
+        }
+
+        // Event listeners for music
+        document.addEventListener('click', startMusic, { once: true });
         window.addEventListener('load', () => {
+            // Attempt autoplay
+            music.play().then(() => {
+                isPlaying = true;
+                musicIcon.classList.remove('fa-music');
+                musicIcon.classList.add('fa-pause');
+            }).catch(() => console.log("Autoplay blocked, waiting for interaction..."));
+
+            // Loader logic
             const loader = document.getElementById('loading-screen');
             setTimeout(() => {
                 loader.style.opacity = '0';
@@ -611,7 +647,6 @@
             const scrolled = (winScroll / height) * 100;
             document.getElementById('progress-bar').style.width = scrolled + "%";
 
-            // Trigger confetti when celebration section is reached
             const celebrationSection = document.getElementById('celebration');
             const rect = celebrationSection.getBoundingClientRect();
             if (rect.top < window.innerHeight && rect.bottom >= 0) {
@@ -649,48 +684,23 @@
 
             const interval = setInterval(function() {
                 const timeLeft = animationEnd - Date.now();
-
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
+                if (timeLeft <= 0) return clearInterval(interval);
 
                 const particleCount = 50 * (timeLeft / duration);
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
             }, 250);
             
-            // Reset after some time so it can trigger again if scrolled back
             setTimeout(() => { confettiLaunched = false; }, 30000);
         }
 
-        // Music Logic
-        const music = document.getElementById('bg-music');
-        const musicIcon = document.getElementById('music-icon');
-        let isPlaying = false;
-
-        function toggleMusic() {
-            if (isPlaying) {
-                music.pause();
-                musicIcon.classList.remove('fa-pause');
-                musicIcon.classList.add('fa-music');
-            } else {
-                music.play();
-                musicIcon.classList.remove('fa-music');
-                musicIcon.classList.add('fa-pause');
-            }
-            isPlaying = !isPlaying;
-        }
-
-        // Particles Background - Optimized for mobile
+        // Particles Background
         const particleCount = window.innerWidth < 480 ? 40 : 100;
         particlesJS('particles-js', {
             "particles": {
                 "number": { "value": particleCount, "density": { "enable": true, "value_area": 800 } },
                 "color": { "value": ["#ff7eb9", "#7e5bef", "#ffffff"] },
-                "shape": { 
-                    "type": ["circle", "heart"],
-                    "stroke": { "width": 0, "color": "#000000" }
-                },
+                "shape": { "type": ["circle", "heart"] },
                 "opacity": { "value": 0.4, "random": true, "anim": { "enable": false } },
                 "size": { "value": 3, "random": true, "anim": { "enable": false } },
                 "line_linked": { "enable": false },
@@ -701,8 +711,7 @@
                 "events": { 
                     "onhover": { "enable": window.innerWidth > 480 }, 
                     "onclick": { "enable": false } 
-                },
-                "modes": { "bubble": { "distance": 200, "size": 6, "duration": 2, "opacity": 0.8, "speed": 3 } }
+                }
             }
         });
 
@@ -710,15 +719,15 @@
         function createBalloons() {
             const container = document.getElementById('balloon-container');
             const colors = ['#ff7eb9', '#7e5bef', '#ffb6c1', '#9370db'];
-            const balloonCount = window.innerWidth < 480 ? 8 : 15; // Fewer balloons on mobile for performance
+            const count = window.innerWidth < 480 ? 8 : 15;
             
-            for (let i = 0; i < balloonCount; i++) {
+            for (let i = 0; i < count; i++) {
                 const balloon = document.createElement('div');
                 balloon.className = 'balloon';
                 balloon.style.left = Math.random() * 100 + '%';
                 balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 balloon.style.animationDelay = Math.random() * 10 + 's';
-                balloon.style.width = (Math.random() * 20 + 25) + 'px'; // Slightly smaller balloons
+                balloon.style.width = (Math.random() * 20 + 25) + 'px';
                 balloon.style.height = (parseFloat(balloon.style.width) * 1.25) + 'px';
                 container.appendChild(balloon);
             }
