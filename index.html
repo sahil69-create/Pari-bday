@@ -34,6 +34,14 @@
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* Hardware Acceleration for smooth animations */
+        .hero-title, .memory-card, .shayari-card, .letter-container, .balloon {
+            will-change: transform, opacity;
+            transform: translateZ(0);
         }
 
         /* Loading Screen */
@@ -165,32 +173,38 @@
 
         /* Hero Section */
         #hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
             background: radial-gradient(circle at center, rgba(126, 91, 239, 0.1) 0%, transparent 70%);
             overflow: hidden;
-            padding: 40px 15px;
+            padding: 60px 20px;
+            width: 100%;
         }
 
         .hero-title {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(2.2rem, 8vw, 4.5rem);
+            font-size: clamp(2.2rem, 10vw, 4.5rem);
             background: linear-gradient(45deg, var(--primary-pink), var(--primary-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 25px;
             filter: drop-shadow(0 0 10px rgba(255, 126, 185, 0.3));
             line-height: 1.3;
-            padding: 0 10px;
+            width: 100%;
+            max-width: 90vw;
         }
 
         .hero-subtitle {
-            font-size: clamp(0.9rem, 4vw, 1.1rem);
+            font-size: clamp(0.9rem, 4.5vw, 1.1rem);
             font-weight: 300;
             line-height: 1.6;
-            max-width: 320px;
+            max-width: 340px;
             margin: 0 auto 35px;
             color: rgba(255, 255, 255, 0.8);
-            padding: 0 10px;
+            width: 100%;
         }
 
         .glow-btn {
@@ -243,6 +257,9 @@
             color: var(--primary-pink);
             font-weight: 500;
             line-height: 1.5;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
         }
 
         /* Memories Section */
@@ -263,7 +280,8 @@
 
         .memory-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border: 1px solid var(--glass-border);
             padding: 30px;
             border-radius: 20px;
@@ -399,19 +417,19 @@
 
         /* Responsive adjustments */
         @media (max-width: 480px) {
-            section { padding: 50px 15px; min-height: 90vh; }
-            .hero-title { font-size: clamp(2rem, 12vw, 3.5rem); margin-bottom: 20px; }
-            .hero-subtitle { font-size: 0.95rem; margin-bottom: 30px; }
-            .section-title { font-size: 1.8rem; margin-bottom: 30px; }
-            .typewriter-container { font-size: 1.1rem; min-height: 80px; }
-            .memory-card { padding: 20px; }
-            .shayari-card { padding: 30px 20px; max-width: 100%; }
+            section { padding: 40px 20px; min-height: 90vh; width: 100%; }
+            .hero-title { font-size: 2.4rem; margin-bottom: 20px; width: 100%; text-align: center; }
+            .hero-subtitle { font-size: 1rem; margin-bottom: 30px; width: 100%; text-align: center; }
+            .section-title { font-size: 1.8rem; margin-bottom: 30px; text-align: center; width: 100%; }
+            .typewriter-container { font-size: 1.1rem; min-height: 80px; width: 100%; text-align: center; }
+            .memory-card { padding: 20px; width: 100%; backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(255,255,255,0.08); }
+            .shayari-card { padding: 30px 20px; max-width: 100%; width: 100%; backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(255,255,255,0.08); }
             .shayari-text { font-size: 1.1rem; }
-            .letter-container { padding: 30px 20px; max-width: 100%; }
+            .letter-container { padding: 30px 20px; max-width: 100%; width: 100%; backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(255,255,255,0.08); }
             .letter-text { font-size: 0.9rem; line-height: 1.7; }
-            .celebration-title { font-size: 2.2rem; }
-            .ending-text { font-size: 1rem; }
-            .final-line { font-size: 1.6rem; }
+            .celebration-title { font-size: 2.2rem; width: 100%; text-align: center; }
+            .ending-text { font-size: 1rem; width: 100%; text-align: center; }
+            .final-line { font-size: 1.6rem; width: 100%; text-align: center; }
             .music-control { width: 45px; height: 45px; bottom: 20px; right: 20px; }
         }
     </style>
@@ -553,12 +571,22 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        // Initialize AOS
+        // Initialize AOS with optimized settings for mobile
         AOS.init({
-            duration: 1000,
-            once: false,
-            mirror: true
+            duration: 800,
+            once: true, // Animations happen only once
+            mirror: false, // Disable mirror for performance
+            disable: 'mobile' // Optional: if still lags, can disable AOS on mobile
         });
+        
+        // Alternative: lighter AOS for mobile
+        if (window.innerWidth < 480) {
+            AOS.init({
+                duration: 600,
+                once: true,
+                offset: 50 // Trigger sooner
+            });
+        }
 
         // Loading Screen Logic
         window.addEventListener('load', () => {
@@ -653,23 +681,27 @@
             isPlaying = !isPlaying;
         }
 
-        // Particles Background
+        // Particles Background - Optimized for mobile
+        const particleCount = window.innerWidth < 480 ? 40 : 100;
         particlesJS('particles-js', {
             "particles": {
-                "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+                "number": { "value": particleCount, "density": { "enable": true, "value_area": 800 } },
                 "color": { "value": ["#ff7eb9", "#7e5bef", "#ffffff"] },
                 "shape": { 
                     "type": ["circle", "heart"],
                     "stroke": { "width": 0, "color": "#000000" }
                 },
-                "opacity": { "value": 0.4, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
-                "size": { "value": 3, "random": true, "anim": { "enable": true, "speed": 2, "size_min": 0.1, "sync": false } },
+                "opacity": { "value": 0.4, "random": true, "anim": { "enable": false } },
+                "size": { "value": 3, "random": true, "anim": { "enable": false } },
                 "line_linked": { "enable": false },
-                "move": { "enable": true, "speed": 1.5, "direction": "top", "random": true, "straight": false, "out_mode": "out", "bounce": false }
+                "move": { "enable": true, "speed": 1.2, "direction": "top", "random": true, "straight": false, "out_mode": "out", "bounce": false }
             },
             "interactivity": {
                 "detect_on": "canvas",
-                "events": { "onhover": { "enable": true, "mode": "bubble" }, "onclick": { "enable": true, "mode": "push" } },
+                "events": { 
+                    "onhover": { "enable": window.innerWidth > 480 }, 
+                    "onclick": { "enable": false } 
+                },
                 "modes": { "bubble": { "distance": 200, "size": 6, "duration": 2, "opacity": 0.8, "speed": 3 } }
             }
         });
